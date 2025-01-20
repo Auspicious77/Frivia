@@ -44,7 +44,6 @@
           "BUILD_DIR" : "/Users/admin/Documents/GitHub/frivia/build/ios",
           "COMPILER_INDEX_STORE_ENABLE" : "NO",
           "FLUTTER_SUPPRESS_ANALYTICS" : "true",
-          "SCRIPT_OUTPUT_STREAM_FILE" : "/var/folders/vf/qnbpgz412y9528p87jrq5_jc0000gn/T/flutter_tools.QXIugh/flutter_ios_build_temp_direWJO5B/pipe_to_stdout",
           "SDKROOT" : "iphonesimulator17.5"
         }
       },
