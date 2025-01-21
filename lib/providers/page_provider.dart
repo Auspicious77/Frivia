@@ -55,17 +55,73 @@ class GamePageProvider extends ChangeNotifier {
     //key that holds each questions
 
     return questions![currentQuestion]['question'];
-
   }
 
-  void answerQuestions(String answer) async{
+  void answerQuestions(String answer) async {
     bool isCorrect = questions![currentQuestion]["correct_answer"] == answer;
 
     currentQuestion++;
 
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: isCorrect ? Colors.green : Colors.red,
+          content: Column(
+            mainAxisSize: MainAxisSize
+                .min, // Ensures the dialog doesn't expand unnecessarily
+            children: [
+              Icon(
+                isCorrect ? Icons.check_circle : Icons.cancel_sharp,
+                color: Colors.white,
+                size: 50,
+              ),
+              const SizedBox(
+                  height: 16), // Adds spacing between the icon and the text
+              Text(
+                isCorrect ? "Correct Answer!" : "Wrong Answer!",
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+        );
+      },
+    );
+
     print(isCorrect ? "correct" : "incorrect");
-    notifyListeners();
+    await Future.delayed(const Duration(seconds: 1));
 
+    // close the dialog
+    Navigator.pop(context);
+    if (currentQuestion == _maxQuestions) {
+      endGame();
+    } else {
+      notifyListeners();
+    }
+  }
 
+  Future<void> endGame() async {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return const AlertDialog(
+            backgroundColor: Colors.blue,
+            title: Text(
+              'Game Ended',
+              style: TextStyle(fontSize: 25, color: Colors.white),
+            ),
+            content: Text("Score: 0/10"),
+          );
+        });
+    await Future.delayed(const Duration(seconds: 3));
+    Navigator.pop(context);
+    Navigator.pop(context);
+
+    // currentQuestion == 0;
   }
 }
