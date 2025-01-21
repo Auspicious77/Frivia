@@ -5,19 +5,23 @@ import 'package:frivia/pages/home_page.dart';
 
 class GamePageProvider extends ChangeNotifier {
   final Dio _dio = Dio();
-  final int _maxQuestions = 10;
+  final int _maxQuestions = 15;
+  final String difficultyLevel;
 
   List? questions;
   int currentQuestion = 0;
   int currectCount = 0;
+  
 
   // Constructor
   BuildContext context;
-  GamePageProvider({required this.context}) {
+  GamePageProvider({required this.context, required this.difficultyLevel }) {
     _dio.options.baseUrl = "https://opentdb.com/api.php"; // Corrected URL
     getQuestionFromApi();
 
     print("GameProvider Initialized");
+    print("difficulty::: $difficultyLevel");
+
   }
 
   Future<void> getQuestionFromApi() async {
@@ -26,7 +30,7 @@ class GamePageProvider extends ChangeNotifier {
       var response = await _dio.get('', queryParameters: {
         "amount": _maxQuestions.toString(),
         "type": "boolean",
-        "difficulty": "easy"
+        "difficulty": difficultyLevel
       });
 
       // Check the response format
