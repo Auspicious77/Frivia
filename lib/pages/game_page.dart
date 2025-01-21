@@ -4,8 +4,12 @@ import 'package:provider/provider.dart';
 
 class GamePage extends StatelessWidget {
   double? _deviceHeight, _deviceWidth;
+   final String difficultyLevel;
 
   GamePageProvider? _pageProvider;
+
+  GamePage({required this.difficultyLevel});
+
   @override
   Widget build(BuildContext context) {
     _deviceHeight = MediaQuery.of(context).size.height;
@@ -13,12 +17,12 @@ class GamePage extends StatelessWidget {
 
 //Wrap all widget inside the Provider.
     return ChangeNotifierProvider(
-      create: (context) => GamePageProvider(context: context),
+      create: (context) => GamePageProvider(context: context, difficultyLevel: difficultyLevel),
       child: _buildUI(),
     );
   }
 
-  //Build UI widget
+  // //Build UI widget
   Widget _buildUI() {
     return Builder(builder: (context) {
       //use the provider
@@ -38,6 +42,29 @@ class GamePage extends StatelessWidget {
       }
     });
   }
+
+
+//   Widget _buildUI() {
+//   return Builder(builder: (context) {
+//     // Use the provider
+//     _pageProvider = context.watch<GamePageProvider>();
+
+//     if (_pageProvider!.questions != null) {
+//       return 
+//       Scaffold(
+//         body: SafeArea(
+//           child: Container(
+//             padding: EdgeInsets.symmetric(horizontal: _deviceWidth! * 0.05),
+//             child: _gameUI(),
+//           ),
+//         ),
+//       );
+//     } else {
+//       // Display HomePage when questions are null
+//       return const HomePage();
+//     }
+//   });
+// }
 
   Widget _gameUI() {
     return Column(

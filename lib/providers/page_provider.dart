@@ -1,21 +1,27 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
+import 'package:frivia/pages/home_page.dart';
 
 class GamePageProvider extends ChangeNotifier {
   final Dio _dio = Dio();
-  final int _maxQuestions = 10;
+  final int _maxQuestions = 15;
+  final String difficultyLevel;
 
   List? questions;
   int currentQuestion = 0;
+  int currectCount = 0;
+  
 
   // Constructor
   BuildContext context;
-  GamePageProvider({required this.context}) {
+  GamePageProvider({required this.context, required this.difficultyLevel }) {
     _dio.options.baseUrl = "https://opentdb.com/api.php"; // Corrected URL
     getQuestionFromApi();
 
     print("GameProvider Initialized");
+    print("difficulty::: $difficultyLevel");
+
   }
 
   Future<void> getQuestionFromApi() async {
@@ -24,7 +30,7 @@ class GamePageProvider extends ChangeNotifier {
       var response = await _dio.get('', queryParameters: {
         "amount": _maxQuestions.toString(),
         "type": "boolean",
-        "difficulty": "easy"
+        "difficulty": difficultyLevel
       });
 
       // Check the response format
@@ -59,6 +65,8 @@ class GamePageProvider extends ChangeNotifier {
 
   void answerQuestions(String answer) async {
     bool isCorrect = questions![currentQuestion]["correct_answer"] == answer;
+    // isCorrect? currectCount++ : currectCount+0;
+    currectCount += isCorrect? 1 : 0;
 
     currentQuestion++;
 
@@ -105,23 +113,34 @@ class GamePageProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> endGame() async {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return const AlertDialog(
-            backgroundColor: Colors.blue,
-            title: Text(
-              'Game Ended',
-              style: TextStyle(fontSize: 25, color: Colors.white),
-            ),
-            content: Text("Score: 0/10"),
-          );
-        });
-    await Future.delayed(const Duration(seconds: 3));
-    Navigator.pop(context);
-    Navigator.pop(context);
+Future<void> endGame() async {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        backgroundColor: Colors.blue,
+        title: const Text(
+          'Game Ended',
+          style: TextStyle(fontSize: 25, color: Colors.white),
+        ),
+        content: Text("Score: $currectCount/$_maxQuestions"),
+      );
+    },
+  );
 
-    // currentQuestion == 0;
-  }
+  // Wait for 3 seconds
+  await Future.delayed(const Duration(seconds: 3));
+  Navigator.pop(context); // Close the dialog
+  Navigator.pop(context); // Navigate back to the previous page
+  
+  // Navigate to the WelcomePage
+  Navigator.push(
+    context,
+    MaterialPageRoute(builder: (context) => const HomePage()),
+  );
+
+  // Optional: Reset the current question index
+  // currentQuestion = 0;
+}
+
 }
