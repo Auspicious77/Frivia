@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frivia/pages/home_page.dart';
 import 'package:frivia/providers/page_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -18,7 +19,7 @@ class GamePage extends StatelessWidget {
     );
   }
 
-  //Build UI widget
+  // //Build UI widget
   Widget _buildUI() {
     return Builder(builder: (context) {
       //use the provider
@@ -38,6 +39,29 @@ class GamePage extends StatelessWidget {
       }
     });
   }
+
+
+//   Widget _buildUI() {
+//   return Builder(builder: (context) {
+//     // Use the provider
+//     _pageProvider = context.watch<GamePageProvider>();
+
+//     if (_pageProvider!.questions != null) {
+//       return 
+//       Scaffold(
+//         body: SafeArea(
+//           child: Container(
+//             padding: EdgeInsets.symmetric(horizontal: _deviceWidth! * 0.05),
+//             child: _gameUI(),
+//           ),
+//         ),
+//       );
+//     } else {
+//       // Display HomePage when questions are null
+//       return const HomePage();
+//     }
+//   });
+// }
 
   Widget _gameUI() {
     return Column(
